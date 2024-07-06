@@ -1,49 +1,28 @@
-const express = require("express")
-const {ProductModel} = require("../models/Product.model")
+const express = require("express");
+const { ProductModel } = require("../models/Product.model");
 const productRouter = express.Router();
 
-
 productRouter.get("/", async (req, res) => {
-    const products = await ProductModel.find()
-    // console.log(res)
-    res.send(products)
-})
+    try {
+        const products = await ProductModel.find();
+        console.log('Products:', products);
+        res.send(products);
+    } catch (err) {
+        console.error('Error fetching products:', err);
+        res.status(500).send('Error fetching products');
+    }
+});
 
 productRouter.post("/create", async (req, res) => {
-    const payload = req.body
-    //get token from header
-    //verify token using jwt
-    try{
-        const new_product = new ProductModel(payload)
-        await new_product.save()
-        res.send({"msg" : "product created successfully"})
+    const payload = req.body;
+    try {
+        const new_product = new ProductModel(payload);
+        await new_product.save();
+        res.send({ "msg": "Product created successfully" });
+    } catch (err) {
+        console.error('Error creating product:', err);
+        res.status(500).send({ "err": "Something went wrong" });
     }
-    catch(err){
-        console.log(err)
-        res.send({"err" : "Something went wrong"})
-    }
-})
+});
 
-// productRouter.patch("/update/:noteID", async (req, res) => {
-//         const noteID = req.params.noteID
-//         const userID = req.body.userID
-//         const product = await ProductModel.findOne({_id:noteID})
-//         if(userID !== product.userID){
-//             res.send("Not authorised")
-//         }
-//         else{
-//             await ProductModel.findByIdAndUpdate({_id : noteID},payload)
-//             res.send({"msg" : "product updated successfully"})
-//         }
-// })
-
-// productRouter.delete("/delete/:noteID", async (req, res) => {
-//     const noteID = req.params.noteID
-//     await ProductModel.findByIdAndDelete({_id : noteID})
-//     res.send({"msg" : "Note deleted successfully"})
-// })
-
-
-module.exports = {productRouter}
-
-
+module.exports = { productRouter };

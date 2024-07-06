@@ -13,6 +13,7 @@ const productSchema = mongoose.Schema({
     care : String,
     origin : String,
     color : String,
+    id: String,
 })
 
 const ProductModel = mongoose.model("product", productSchema)
